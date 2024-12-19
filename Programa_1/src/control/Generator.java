@@ -11,6 +11,7 @@ import java.util.Locale;
 public class Generator {
 
 	public static void main(String[] args) {
+		//Chance to malfunction
 		int functionControler = (int) (Math.random() * 100);
 		
 		if (functionControler < 30) {
@@ -30,9 +31,6 @@ public class Generator {
 			
 			sc.close();
 		}
-//		for (int i = 0; i < 100; i++) {
-//			System.out.println((double) (Math.floor(Math.random()*(3000-1500)+1500)));
-//		}
 	}
 
 }
