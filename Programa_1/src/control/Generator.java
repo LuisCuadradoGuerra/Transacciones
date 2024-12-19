@@ -17,12 +17,13 @@ public class Generator {
 		if (functionControler < 30) {
 			System.exit(-1);			
 		} else {
+			//Number of transactions
 			Scanner sc = new Scanner(System.in);
 			int transfersNumber = Integer.parseInt(sc.nextLine());
-			
+			//Format for salary to be with
 			DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
 			DecimalFormat twoDecimals = new DecimalFormat("0.00", symbols);
-			
+			//Loop for create transactions randomly. Inner transantions (1) External transactions (2)
 			for (int i = 0; i < transfersNumber; i++) {
 				int createdAccount = ((int) (Math.random()*(2)+1) * 100000000) + ((int) (Math.random()*99999999));
 				double salary = (double) (Math.random()*(3000-1500)+1500);

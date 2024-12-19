@@ -13,18 +13,18 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class AssignControler {
-	// Money aviable and debs
+	// Money available and debts
 	private double companyAccountCash;
 	private double companyDebs;
 
-	// Collection readed from the document and the documents
+	// Collection read from the document and the documents
 	private ArrayList<String> transfersCollection;
 	private File transfers;
 	private File innerTransfers;
 	private File externalTransfers;
 	private File pendingTransfers;
 
-	// Atributes for control
+	// Attributes for control
 	private boolean taskDone;
 	private boolean withoutCredit;
 	private int processesEnded;
@@ -34,23 +34,25 @@ public class AssignControler {
 	public AssignControler(double companyAccountCash, File transfers) {
 		this.companyAccountCash = companyAccountCash;
 		this.companyDebs = 0;
-
+		
+		//Initialization variables
 		taskDone = false;
 		withoutCredit = false;
 		nextTransfer = 0;
 		processesEnded = 0;
 		consolePendingTransfers = "";
 
+		//Files
 		this.transfersCollection = new ArrayList<String>();
 		this.transfers = transfers;
 		this.innerTransfers = new File("transferenciasInt.txt");
 		this.externalTransfers = new File("transferenciasExt.txt");
 		this.pendingTransfers = new File("transferenciasSinSaldo.txt");
-
+		//Creation files
 		reStartFile(innerTransfers);
 		reStartFile(externalTransfers);
 		reStartFile(pendingTransfers);
-
+		//Read the origin file and fill the populate with data
 		try (BufferedReader br = new BufferedReader(new FileReader(transfers))) {
 			int cont = 0;
 			while (br.ready()) {
@@ -63,7 +65,7 @@ public class AssignControler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		System.out.println("Total deudas empresa: " + companyDebs);
 	}
 
@@ -82,7 +84,7 @@ public class AssignControler {
 	public double getCompanyAccountCash() {
 		return companyAccountCash;
 	}
-
+	//If the file exist, delete it and create a new one. If not, create it
 	public void reStartFile(File document) {
 		try {
 			if (document.exists()) {
@@ -95,8 +97,9 @@ public class AssignControler {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void processing(ProcessorThread worker) {
+		//End control
 		if (nextTransfer == transfersCollection.size()) {
 			if (!(consolePendingTransfers.equals(""))) {
 				System.out.println();
@@ -105,10 +108,11 @@ public class AssignControler {
 			taskDone = true;
 			return;
 		}
-
+		//Get the data to process it
 		String transfer = transferToProcess();
 		String[] keyValue = transfer.split(";");
-
+		
+		//Internal transfers
 		if (keyValue[0].indexOf("1") == 0) {
 			try {
 				Thread.sleep(1000);
@@ -124,24 +128,26 @@ public class AssignControler {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		//External transfers
 		} else {
 			registerTransfer(externalTransfers, keyValue);
 			updateAccount(keyValue, worker);
 			if (withoutCredit) {
 				consolePendingTransfers += "Grabamos transferencia externa sin saldo. Cuenta " + keyValue[0] + "\n";
+				withoutCredit = false;
 			} else {
 				System.out.println("Grabamos transferencia externa. Cuenta " + keyValue[0]);
 			}
 		}
 
 	}
-
+	//Flow manager
 	public synchronized String transferToProcess() {
 		String transfer = transfersCollection.get(nextTransfer);
 		nextTransfer++;
 		return transfer;
 	}
-
+	//Register transfers in the files
 	public synchronized void registerTransfer(File document, String[] keyValue) {
 		double salary = Double.parseDouble(keyValue[1]);
 
@@ -159,7 +165,7 @@ public class AssignControler {
 			}
 		}
 	}
-
+	//Update the amount in the Company Account
 	public synchronized void updateAccount(String[] keyValue, ProcessorThread worker) {
 		double salary = Double.parseDouble(keyValue[1]);
 
@@ -174,12 +180,9 @@ public class AssignControler {
 			billing(worker, salary);
 		}
 	}
-
+	//Control the money moved by the threads
 	public synchronized void billing(ProcessorThread worker, Double salary) {
 		worker.setMoneyMoved(worker.getMoneyMoved() + salary);
 	}
 
-//	public synchronized void increaseEndedProcessesCount() {
-//		processesEnded++;
-//	}
 }

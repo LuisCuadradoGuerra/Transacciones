@@ -33,11 +33,12 @@ public class ProcessorThread extends Thread {
 
 	@Override
 	public void run() {
+		//Loop controlled by boolean in AssignControler
 		while (!bank.isTaskDone()) {
 			bank.processing(this);
 		}
 		
-		//Esta espera es meramente visual, para que saque los datos en orden. Puede comentarse y funciona igual el programa.
+		//For visual output control, not involved in program function
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -45,7 +46,7 @@ public class ProcessorThread extends Thread {
 			e.printStackTrace();
 		}
 		
-		
+		//Order
 		bank.setProcessesEnded(bank.getProcessesEnded() + 1);
 		if (bank.getProcessesEnded() == 1) {
 			System.out.println();
@@ -56,7 +57,7 @@ public class ProcessorThread extends Thread {
 		
 		System.out.println(
 				"Subcontrata " + subcontractCompany + " ha hecho transferencias por valor de: " + twoDecimals.format(moneyMoved) + " €.");
-
+		//Ended output
 		if (bank.getProcessesEnded() == 3) {
 			System.out.println();
 			System.out.println("Quedan " + twoDecimals.format(bank.getCompanyAccountCash()) + " € en la cuenta.");

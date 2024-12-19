@@ -15,7 +15,7 @@ public class Main {
 		//Tools of control
 		int error404 = 0;
 		
-		// 1 interna 2 externa
+		// 1 Internal 2 External
 		Scanner sc = new Scanner(System.in);
 		
 		String transfersFileName;
@@ -23,7 +23,6 @@ public class Main {
 		int transfersNumber;
 
 		//Collect input from console
-//		if (args.length == 0) {Intento de usar el args para las pruebas
 		System.out.println("Document name:");
 		transfersFileName = sc.nextLine();
 
@@ -32,17 +31,7 @@ public class Main {
 
 		System.out.println("Number of transfers to process:");
 		transfersNumber = Integer.parseInt(sc.nextLine());
-//		} else {
-//			String[] standarInput = args.toString().split(";");
-//			System.out.println("Document name:");
-//			transfersFileName = standarInput[0];
-//
-//			System.out.println("Document path:");
-//			transfersFilePath = standarInput[1];
-//
-//			System.out.println("Number of transfers to process:");
-//			transfersNumber = Integer.parseInt(standarInput[2]);
-//		}
+
 		
 		
 		//Create if don´t exits or path to document
@@ -79,9 +68,10 @@ public class Main {
 		if (error404 < 0) {
 			System.out.println("Error con la generación del fichero o su ruta");
 		} else {
+			//String to double from a double with two decimals calculated from the total transfers required x ramdom double between 3000 and 2000
 			DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
 			DecimalFormat twoDecimals = new DecimalFormat("0.00", symbols);
-			//String to double from a double with two decimals calculated from the total transfers required x ramdom double between 3000 and 2000
+			//Calculate the company cash
 			double companyAccountCash = Double.parseDouble(twoDecimals.format(transfersNumber * ((double) (Math.random()*(3000-2000)+2000))));
 			System.out.println("Total cuenta empresa: " + companyAccountCash);
 			
